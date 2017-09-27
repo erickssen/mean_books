@@ -1,0 +1,137 @@
+ <!doctype html> 
+    <body>
+
+    <html lang="en">
+             <h1>MONGODB debug</h1>
+             <br>
+             <section class="insert">
+                <h3>Insert Data</h3>
+                <br>
+                <form action="/insert" method="post">
+
+                    <div class="input">
+                        <label for="book_name">book_name</label>
+                        <input type="text" id="book_name" name="book_name">
+                    </div>
+                    <div class="input">
+                        <label for="author">Author</label>
+                        <input type="text" id="author" name="author">
+                    </div>
+                    <div class="input">
+                        <label for="content">isbn</label>
+                        <input type="text" id="isbn" name="isbn">
+                    </div>
+                    
+                    <div class="input">
+                        <label for="content">quantity</label>
+                        <input type="text" id="quantity" name="quantity">
+                    </div>
+                    <div class="input">
+                        <label for="content">publish_date</label>
+                        <input type="text" id="publish_date" name="publish_date">
+                    </div>
+                    <div class="input">
+                        <label for="content">category</label>
+                        <input type="text" id="category" name="category">
+                    </div>
+                    <button type="submit">INSERT</button>
+                </form>
+            </section>
+            <br><br>
+
+
+            <section class="get">
+                <h3>show books</h3>
+                <a href="/get-data">load data</a>
+                <div>
+                    {{# each items }}
+                        <article class="item">
+
+                            <div>name: {{ this.book_name }}</div>
+                            <div>author: {{ this.author }}</div>
+                            <div>isbn: {{ this.isbn }}</div>
+                            <div>quantity: {{ this.quantity }}</div>
+                            <div>publish_date: {{ this.publish_date }}</div>
+                            <div>category: {{ this.category }}</div>
+                            <div>books_issued: {{ this.books_issued }}</div>
+                            <div>book_id: {{ this._id }}</div>
+                         <br>
+                         <!-- <form action="/issue" method="post">   
+                            issue<input type="submit" name="id" id="id" value="{{ this.id }}"/>
+                         </form> -->
+                         <br><br>
+                        </article>
+                    {{/each}}
+                </div>
+            </section>
+            <br><br>
+
+
+            <section class="update">
+                <h3>Update #of books</h3>
+                <form action="/update" method="post">
+                    
+                    <label for="id">ID</label>
+                    <input type="text" id="id" name="id">
+                    
+                    <label for="quantiry">quantity</label>
+                    <input type="text" id="quantity" name="quantity">
+                   
+                    <button type="submit">UPDATE</button>
+                </form>
+            </section>
+            <br><br>
+
+
+            <section class="delete">
+                <h3>Delete book</h3>
+                <form action="/delete" method="post">
+                    <label for="id">ID</label>
+                    <input type="text" id="id" name="id">
+                    <button type="submit">DELETE</button>
+                </form>
+            </section>
+            <br><br><br><br>
+
+            <section class="issue">
+                <h3>Issue Book</h3>
+                <form action="/issue" method="post">
+                    <div class="input">
+                        <label for="id">ID</label>
+                        <input type="text" id="id" name="id">
+                    </div>
+                    <button type="submit">Issue</button>
+                </form>
+            </section>
+
+           
+            <h3>Return Book</h3>
+            <form action="/return" method="post">
+                <label for="id">ID</label>
+                <input type="text" id="id" name="id">
+                <button type="submit">Return</button>
+            </form>
+            <br><br>
+
+
+
+                <h3>show transactions</h3>
+                <a href="/transactions">LOAD DATA</a>
+                    {{# each issues }}
+                        <article class="item">
+                            <div>book_name: {{ this.book_name }}</div>
+                            <div>book_id: {{ this.book_id }}</div>
+                            <div>date: {{ this.date }}</div>
+                            <div>state: {{ this.state }}</div>
+                            <div>ID: {{ this.id }}</div>
+                            <br><br>
+                        </article>
+                    {{/each}}
+              
+           
+
+    </body>
+</html>
+
+
+
