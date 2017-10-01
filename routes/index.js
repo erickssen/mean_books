@@ -20,44 +20,27 @@ var bookDetails = new Schema({
 var Book = mongoose.model('Book', bookDetails);
 
 
-
-
 var transaction = new Schema({
-	book_name: {type: String, require: false},
+	b_name: {type: String, require: false},
 	book_id: {type: String, required: false},
 	date: {type: Date, required: false},
 	state: {type: String, required: false}
-}, { collection: 'books_data'});
+}, { collection: 'transaction_data'});
 
 var BookTransaction = mongoose.model('BookTransaction', transaction);
 
 
-
-
-
-
-//------------------------books------------------------//
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index');
-});
-
-
-
 //get all books
-router.get('/get-data', function(req, res, next){
-	Book.find()
-		.then(function(doc){
-			res.render('index', { items: doc });
+router.get('/', (req, res, next)=>{
+	Book.find(function(err, books){
+			res.json(books);
 		});
 });
 
 
-
 //save a new book
-router.post('/insert', function(req, res, next){
-	var item = {
+router.post('/insert', (req, res, next)=>{
+	let book = new Book ({
 		book_name: req.body.book_name,
 		author: req.body.author,
 		isbn: req.body.isbn,
@@ -65,126 +48,99 @@ router.post('/insert', function(req, res, next){
 		publish_date: req.body.publish_date,
 		category: req.body.category,
 		books_issued: 0
-	};
-	var data = new Book(item);
-	data.save();
-	res.redirect('/')
-});
+	});
+	book.save((err, book)=>{
+		if(err)
+		{
+			res.json({msg: 'add book failed'});
+		}
+			else{
+				res.json({msg: 'book added'})
+			}
 
+		})
+});
 
 
 //update number of books
-router.post('/update', function(req, res, next){
-	var id = req.body.id;
+router.post('/update/:id',(req, res, next)=>{
+	Book.findByIdAndUpdate(req.body._id, req.body, function(err, book){
 
-	Book.findById(id, function(err, doc){
 		if(err){
-			// res.send(err);
-			console.log('error updating model, no entry found');
+			res.send(err);
 		}
-		doc.quantity = req.body.quantity;
-		doc.save();
+		res.json(book);
 	})
-	res.redirect('/');
 });
-
 
 
 //remove book
-router.post('/delete', function(req, res, next){
-	var id = req.body.id;
-	Book.findByIdAndRemove(id).exec();
-	res.redirect('/');
-});
+router.delete('/delete/:id',(req, res, next)=>{
 
-	
+	Book.remove({_id: req.params.id}, function(err, result){
+			if(err){
+				res.json(err);
+			}
+			else{
+				res.json(result);
+			}
+		});
+	});
+
 //---------------------transactions-----------------------------//
 
-
-
-//get all transactions
-router.get('/transactions', function(req, res, next){
-	BookTransaction.find()
-		.then(function(doc){
-			res.render('index', { issues: doc });
+router.get('/transactions', (req, res, next)=>{
+	BookTransaction.find(function(err, tran){
+			res.json(tran);
 		});
 });
 
 
-
 //transaction issue
-router.post('/issue', function(req, res, next){
+router.post('/issue/:id', function(req, res, next){
+		var book_id = req.body._id;
+		var book = req.body
+		Book.findById(book_id, function(err, doc){
 
-	var book_id = req.body.id;
-
-	Book.findById(book_id, function(err, doc){
-		if(doc.quantity > 0){
-			doc.quantity--;
-			doc.books_issued++;
-			doc.save();
-		}
-		else{
-			console.log('error with find book at issue') 
-		}
-		var data = {
-			book_name: doc.book_name,
-			book_id: book_id,
-			date: new Date(),
-			state: 'issued'
-		}
-		var transaction = new BookTransaction(data);
-		transaction.save();
-		res.redirect('/'); 
+				if(doc.quantity > 0){
+					doc.quantity--;
+					doc.books_issued++;
+					doc.book_id = book_id;
+					doc.save();
+				}
+				else{
+					return;
+			  }
+				var data = {
+					b_name: doc.book_name,
+					book_id: book_id,
+					date: new Date(),
+					state: 'issued'
+				}
+				var transaction = new BookTransaction(data);
+				transaction.save();
 	});
 });
-
 
 
 //transaction return
-router.post('/return', function(req, res, next){
+router.post('/return/:id', function(req, res, next){
 
-	var transaction_id = req.body.id;
+			var trans_id = req.body._id;
 
-	BookTransaction.findById(transaction_id, function(err, doc){ 
+			BookTransaction.findById(trans_id, function(err, doc){
+				doc.date = new Date();
+				doc.state = 'returned';
+				doc.save();
 
-		doc.date = new Date();
-		doc.state = 'returned';
-		doc.save();
-	
-	var book_id = doc.book_id;
-	Book.findById(book_id, function(err, doc){
-		doc.quantity++;
-		doc.books_issued--;
-		doc.save();
-		console.log('--------->', typeof(doc))
-	});
-	
+			var book_id = doc.book_id;
+			Book.findById(book_id, function(err, doc){
+				doc.quantity++;
+				doc.books_issued--;
+				doc.save();
+			});
+
+		});
 });
-	res.redirect('/'); 
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = router;
-
-
-
-
-
-
-

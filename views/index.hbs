@@ -1,4 +1,6 @@
- <!doctype html> 
+
+
+ <!doctype html>
     <body>
 
     <html lang="en">
@@ -21,7 +23,7 @@
                         <label for="content">isbn</label>
                         <input type="text" id="isbn" name="isbn">
                     </div>
-                    
+
                     <div class="input">
                         <label for="content">quantity</label>
                         <input type="text" id="quantity" name="quantity">
@@ -44,6 +46,9 @@
                 <h3>show books</h3>
                 <a href="/get-data">load data</a>
                 <div>
+
+
+
                     {{# each items }}
                         <article class="item">
 
@@ -56,9 +61,6 @@
                             <div>books_issued: {{ this.books_issued }}</div>
                             <div>book_id: {{ this._id }}</div>
                          <br>
-                         <!-- <form action="/issue" method="post">   
-                            issue<input type="submit" name="id" id="id" value="{{ this.id }}"/>
-                         </form> -->
                          <br><br>
                         </article>
                     {{/each}}
@@ -70,13 +72,13 @@
             <section class="update">
                 <h3>Update #of books</h3>
                 <form action="/update" method="post">
-                    
+
                     <label for="id">ID</label>
                     <input type="text" id="id" name="id">
-                    
+
                     <label for="quantiry">quantity</label>
                     <input type="text" id="quantity" name="quantity">
-                   
+
                     <button type="submit">UPDATE</button>
                 </form>
             </section>
@@ -104,7 +106,7 @@
                 </form>
             </section>
 
-           
+
             <h3>Return Book</h3>
             <form action="/return" method="post">
                 <label for="id">ID</label>
@@ -127,11 +129,8 @@
                             <br><br>
                         </article>
                     {{/each}}
-              
-           
+
+
 
     </body>
 </html>
-
-
-
