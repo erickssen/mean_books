@@ -25,10 +25,12 @@ export class BookListService {
   }
 
   //delete
-  deleteBook(id){
-    return this.http.delete('http://localhost:3000/delete/' + id)
+  deleteBook(id, data){
+    var headers = new Headers();
+    headers.append('content-type', 'application/json');
+    return this.http.post('http://localhost:3000/delete/' + id, data, {headers:headers})
       .map(res => res.json());
-  }
+  } 
 
   //update
   updateBook(id, data){

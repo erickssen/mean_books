@@ -40,6 +40,7 @@ router.get('/', (req, res, next)=>{
 
 //save a new book
 router.post('/insert', (req, res, next)=>{
+
 	let book = new Book ({
 		book_name: req.body.book_name,
 		author: req.body.author,
@@ -49,16 +50,18 @@ router.post('/insert', (req, res, next)=>{
 		category: req.body.category,
 		books_issued: 0
 	});
-	book.save((err, book)=>{
-		if(err)
-		{
-			res.json({msg: 'add book failed'});
-		}
-			else{
-				res.json({msg: 'book added'})
-			}
+	if(book.book_name && book.quantity > 0){
+			book.save((err, book)=>{
+					if(err)
+					{
+						res.json({msg: 'add book failed'});
+					}
+						else{
+							res.json({msg: 'book added'})
+						}
 
-		})
+					})
+			}
 });
 
 
@@ -75,16 +78,18 @@ router.post('/update/:id',(req, res, next)=>{
 
 
 //remove book
-router.delete('/delete/:id',(req, res, next)=>{
-
-	Book.remove({_id: req.params.id}, function(err, result){
-			if(err){
-				res.json(err);
+router.post('/delete/:id',(req, res, next)=>{
+	books_issued = req.body.books_issued;
+	if(books_issued == 0){
+			Book.remove({_id: req.params.id}, function(err, result){
+					if(err){
+						res.json(err);
+					}
+					else{
+						res.json(result);
+					}
+				});
 			}
-			else{
-				res.json(result);
-			}
-		});
 	});
 
 //---------------------transactions-----------------------------//
@@ -103,10 +108,10 @@ router.post('/issue/:id', function(req, res, next){
 		Book.findById(book_id, function(err, doc){
 
 				if(doc.quantity > 0){
-					doc.quantity--;
-					doc.books_issued++;
-					doc.book_id = book_id;
-					doc.save();
+						doc.quantity--;
+						doc.books_issued++;
+						doc.book_id = book_id;
+						doc.save();
 				}
 				else{
 					return;
@@ -127,20 +132,20 @@ router.post('/issue/:id', function(req, res, next){
 router.post('/return/:id', function(req, res, next){
 
 			var trans_id = req.body._id;
-
-			BookTransaction.findById(trans_id, function(err, doc){
-				doc.date = new Date();
-				doc.state = 'returned';
-				doc.save();
-
-			var book_id = doc.book_id;
-			Book.findById(book_id, function(err, doc){
-				doc.quantity++;
-				doc.books_issued--;
-				doc.save();
-			});
-
-		});
+			state = req.body.state;
+						BookTransaction.findById(trans_id, function(err, doc){
+							  if(doc.state === 'issued'){
+											doc.date = new Date();
+											doc.state = state;
+											doc.save();
+											var book_id = doc.book_id;
+											Book.findById(book_id, function(err, doc){
+													doc.quantity++;
+													doc.books_issued--;
+													doc.save();
+											});
+									}
+					});
 });
 
 module.exports = router;

@@ -44,6 +44,10 @@ export class BookListComponent implements OnInit {
 
   //gets all books
   ngOnInit() {
+
+    this.bookListService.getTransactions()
+      .subscribe(transactions => this.transactions = transactions)
+
     this.bookListService.getBooks()
       .subscribe(books => this.books = books);
   }
@@ -68,10 +72,10 @@ export class BookListComponent implements OnInit {
       });
   }
 
-  //calls deletBook method in template
-  deleteBook(id:any){
+  //Delete book
+  deleteBook(id:any, book:any){
     var books = this.books;
-    this.bookListService.deleteBook(id)
+    this.bookListService.deleteBook(id, book)
       .subscribe(data =>{
         if(data.n == 1){
           for(var i = 0; i < books.length; i++){
@@ -85,34 +89,34 @@ export class BookListComponent implements OnInit {
 
   //update
   updateBook(id:any, data:any){
-      var books = this.books;
-      this.bookUpdate = null;
-      this.bookListService.updateBook(id, data)
-        .subscribe(data =>{
-        })
+      if(data.quantity > 0){
+          var books = this.books;
+          this.bookUpdate = null;
+          this.bookListService.updateBook(id, data)
+          .subscribe(data =>{
+          })
+      }
   }
 
 //----Transactions-----
 
-getTransactions(){
-    this.bookListService.getTransactions()
-      .subscribe(transactions => this.transactions = transactions);
-}
+
 
   //issue
   issueBook(id:any, data:Book){
-      data.quantity--;
-      data.books_issued++;
-      this.bookListService.issueBook(id, data)
-        .subscribe(data =>{
-          this.transactions.push(data);
-        })
+    if(data.quantity > 0){
+        data.quantity--;
+        data.books_issued++;
+        this.bookListService.issueBook(id, data)
+          .subscribe(data =>{
+            this.transactions.push(data);
+          })
+      }
   }
 
   //return
   returnBook(id:any, data:Transaction){
       var books = this.books;
-      alert(id)
       var t_book_id = data.book_id;
       data.state = 'returned';
 
