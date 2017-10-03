@@ -44,7 +44,6 @@ export class BookListComponent implements OnInit {
 
   //gets all books
   ngOnInit() {
-
     this.bookListService.getTransactions()
       .subscribe(transactions => this.transactions = transactions)
 
@@ -99,7 +98,6 @@ export class BookListComponent implements OnInit {
   }
 
 //----Transactions-----
-
 
 
   //issue

@@ -1,7 +1,7 @@
 
-
+<div class="container">
 <!-- tabs panel -->
-<ul class="nav nav-tabs" id="myTab" role="tablist">
+<ul class="nav nav-pills" id="myTab" role="tablist">
   <li class="nav-item">
     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-expanded="true">Books</a>
   </li>
@@ -20,7 +20,7 @@
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
       <table class="table table-striped table-hover ">
         <thead>
-          <tr class="warning">
+          <tr class="success">
             <th> <div class="col-sm-4">Name</div>  </th>
             <th> <div class="col-sm-4">Author</div>  </th>
             <th> <div class="col-sm-4">Isbn</div> </th>
@@ -35,7 +35,7 @@
         </thead>
 
         <tbody>
-           <tr *ngFor = "let book of books" class="info">
+           <tr *ngFor = "let book of books" class="default">
              <td><div class="col-sm-4" (click)="update(book)" >{{ book.book_name }}</div></td>
              <td><div class="col-sm-4" (click)="update(book)">{{ book.author }}</div></td>
              <td><div class="col-sm-4" (click)="update(book)">{{ book.isbn }}</div></td>
@@ -68,7 +68,7 @@
     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
           <table class="table table-striped table-hover ">
                 <thead>
-                  <tr class="warning">
+                  <tr class="success">
                     <th> <div class="col-sm-4">Name</div>  </th>
                     <th> <div class="col-sm-4">BookId</div>  </th>
                     <th> <div class="col-sm-4">Date</div> </th>
@@ -78,12 +78,12 @@
                 </thead>
 
                  <tbody>
-                    <tr *ngFor = "let transaction of transactions" class="info">
+                    <tr *ngFor = "let transaction of transactions" class="default">
                       <td><div class="col-sm-4">{{ transaction.b_name }}</div></td>
                       <td><div class="col-sm-4">{{ transaction.book_id }}</div></td>
                       <td><div class="col-sm-4">{{ transaction.date }}</div></td>
                       <td><div class="col-sm-4">{{ transaction.state }}</div></td>
-                      <td><input type="button" (click)="returnBook(transaction._id, transaction)" value="return" class="btn btn-danger"></td>
+                      <td><input type="button" (click)="returnBook(transaction._id, transaction)" value="return" class="btn btn-info"></td>
                     </tr>
                  </tbody>
            </table>
@@ -137,5 +137,6 @@
     </div>
 
   </div>
+</div>
 
 </div>
